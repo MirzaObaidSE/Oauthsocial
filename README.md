@@ -7,17 +7,13 @@ Welcome to Oauthsocial! This gem can be used for Twitter 3 step authentication l
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'oauthsocial'
+gem 'oauthsocial', git: "https://github.com/MirzaObaidSE/Oauthsocial.git"MirzaObaidSE/Oauthsocialhttps://github.com
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install oauthsocial
-
+    
 ## Usage
 Creating a Twitter Application
 
@@ -44,7 +40,14 @@ CONSUMER_KEY: "Consumer Api key"
 CONSUMER_SECRET: "Consumer Api Secret"
 
 ```                                                        
-
+To Add provider and uid to User table
+```
+rails g migration add_provider_and_uid_to_users provider:string, uid:integer
+```
+and run
+```
+rails db:migrate
+```
 Add route to your app to login to Twitter account and Add that link to your Page where you want o add this link
 
 ```
