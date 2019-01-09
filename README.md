@@ -1,8 +1,6 @@
 # Oauthsocial
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/oauthsocial`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome to Oauthsocial! This gem can be used for Twitter 3 step authentication log in.
 
 ## Installation
 
@@ -21,14 +19,74 @@ Or install it yourself as:
     $ gem install oauthsocial
 
 ## Usage
+Creating a Twitter Application
 
-TODO: Write usage instructions here
+ Log in to your Twitter account and browse to the url 
+```
+ https://apps.twitter.com
+```
+On the Twitter apps page, click the Create New App button.
+Fill in the Name, Description, and Website fields.
+Enter ```http://localhost:3000/twitter/callback``` 
+in the Callback URL field.Accept the Developer Agreement and click the Create your Twitter application button.On the application page, that is shown next, click the Settings tab.
 
-## Development
+Enter a mock url in the Privacy Policy URL, and Terms of Service URL field and click the Update Settings button.
+Click the Permissions tab and change the Access type to Read only.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Check the Request email addresses from users field under the Additional Permissions section and click the Update Settings button.
+Click the Keys and Access Tokens tab.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Note down the Consumer Key (API Key), and Consumer Secret (API Secret) shown on the page as they will be needed later.
+
+Add Consumer key and Consumer Secret in ```Config/application.yml ```
+```
+CONSUMER_KEY: "Consumer Api key"
+CONSUMER_SECRET: "Consumer Api Secret"
+
+```                                                        
+
+Add route to your app to login to Twitter account and Add that link to your Page where you want o add this link
+
+```
+<%= link_to 'Twitter Login', twitter_login_path %>
+```
+In Action of this routes just add following line
+
+```
+redirect_to TwitterAuthenticate.login_to_twitter_account
+
+```
+It will take user to Twitter Login page after Login it will send an callback to your application callback route
+which was added while creating twitter application. 
+In callback Action Will be like this 
+
+```ruby
+def callback
+    user = TwitterAuthenticate.twitter_callback(params)
+    @user = User.create_from_provider_data(user , 'twitter')
+    if @user.persisted?
+      sign_in_and_redirect @user
+    else
+      flash[:error] = 'There was a problem signing you in through Twitter. Please register or try signing in later.'
+      redirect_to new_user_registration_url
+    end
+end
+```
+
+And file Add create_from_provider_data Method In User Model
+
+```ruby
+def self.create_from_provider_data(provider_data , provider)
+      where(provider: provider, uid: provider_data['id']).first_or_create do | user |
+        user.password = Devise.friendly_token[0, 20]
+        email = "#{provider_data['screen_name']}@#{provider}.com"
+        user.email = email
+      end
+end
+
+```
+
+It will create user and redirect to your logged in home
 
 ## Contributing
 
@@ -38,6 +96,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
-## Code of Conduct
-
-Everyone interacting in the Oauthsocial project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/oauthsocial/blob/master/CODE_OF_CONDUCT.md).
