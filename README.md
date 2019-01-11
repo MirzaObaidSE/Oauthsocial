@@ -19,7 +19,7 @@ Creating a Twitter Application
 
  Log in to your Twitter account and browse to the url 
 ```
- https://apps.twitter.com
+ https://developer.twitter.com/
 ```
 On the Twitter apps page, click the Create New App button.
 Fill in the Name, Description, and Website fields.
