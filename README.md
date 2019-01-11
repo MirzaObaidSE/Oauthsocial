@@ -7,7 +7,7 @@ Welcome to Oauthsocial! This gem can be used for Twitter 3 step authentication l
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'oauthsocial', git: "https://github.com/MirzaObaidSE/Oauthsocial.git"MirzaObaidSE/Oauthsocialhttps://github.com
+gem 'oauthsocial', git: "https://github.com/MirzaObaidSE/Oauthsocial.git"
 ```
 
 And then execute:
@@ -48,7 +48,7 @@ and run
 ```
 rails db:migrate
 ```
-Add route to your app to login to Twitter account and Add that link to your Page where you want o add this link
+Add route to your app to login to Twitter account and Add that link to your Page where you want to add this link
 
 ```
 <%= link_to 'Twitter Login', twitter_login_path %>
